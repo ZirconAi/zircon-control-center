@@ -1,4 +1,5 @@
 import Nav from '@/components/Nav';
+import AutoRefresh from '@/components/AutoRefresh';
 import StatusBadge from '@/components/StatusBadge';
 import { fetchManyStates } from '@/lib/homeassistant';
 
@@ -53,10 +54,13 @@ export default async function PrintingPage() {
   const hmsErr = get('binary_sensor.h2d_0948ad552900561_hms_errors');
   const printErr = get('binary_sensor.h2d_0948ad552900561_print_error');
   const hasError = hmsErr === 'on' || printErr === 'on';
+  const status = get('sensor.h2d_0948ad552900561_print_status').toLowerCase();
+  const refreshMs = status === 'running' || status === 'printing' || status === 'pause' || status === 'paused' ? 15000 : 60000;
 
   return (
     <main className="min-h-screen bg-zinc-950 p-8 text-zinc-100">
       <div className="mx-auto max-w-6xl">
+        <AutoRefresh intervalMs={refreshMs} />
         <Nav />
         <h1 className="text-3xl font-bold">3D Printing</h1>
         <p className="mt-2 text-zinc-300">Bambu H2D live telemetry and print health.</p>
@@ -104,7 +108,7 @@ export default async function PrintingPage() {
           </div>
         </div>
 
-        <div className="mt-4 rounded-xl border p-4 ${hasError ? 'border-red-500/40 bg-red-500/10' : 'border-emerald-500/30 bg-emerald-500/10'}">
+        <div className={`mt-4 rounded-xl border p-4 ${hasError ? 'border-red-500/40 bg-red-500/10' : 'border-emerald-500/30 bg-emerald-500/10'}`}>
           <p className="text-sm font-semibold">Error Panel</p>
           <p className="mt-2 text-sm">HMS errors: <strong>{hmsErr}</strong> · Print error: <strong>{printErr}</strong></p>
         </div>

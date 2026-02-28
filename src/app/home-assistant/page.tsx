@@ -1,4 +1,5 @@
 import Nav from '@/components/Nav';
+import AutoRefresh from '@/components/AutoRefresh';
 import StatusBadge from '@/components/StatusBadge';
 import SceneActions from '@/components/ha/SceneActions';
 import { fetchManyStates } from '@/lib/homeassistant';
@@ -45,6 +46,7 @@ export default async function HomeAssistantPage() {
   return (
     <main className="min-h-screen bg-zinc-950 p-8 text-zinc-100">
       <div className="mx-auto max-w-6xl">
+        <AutoRefresh intervalMs={30000} />
         <Nav />
         <h1 className="text-3xl font-bold">Home Assistant</h1>
         <p className="mt-2 text-zinc-300">Live controls + health view for your automations and devices.</p>
